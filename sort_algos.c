@@ -46,9 +46,10 @@ char *sortFuncName[] = {
 // --------------------------------------------------------------- Selection Sort ----------------------------------------------------------
 
 void selectSort(data_t * nums, const int numsSize) {
-    for (int i = 0; i < numsSize; i++) {
+    int i, j;
+    for (i = 0; i < numsSize; i++) {
         data_t tmp_min = i;
-        for (int j = i; j < numsSize; j++) {
+        for (j = i; j < numsSize; j++) {
             if (nums[tmp_min] > nums[j]) {
                 tmp_min = j;
             }
@@ -218,7 +219,8 @@ int printArray(data_t * array, const int aSize, const char * text) {
     }
 
     printf("\n * %s\n *", text);
-    for (int i = 0; i < aSize; i++) {
+    int i;
+    for (i = 0; i < aSize; i++) {
         printf("%4d ", array[i]);
         if (19 == i % 20) printf("\n *");
     }
@@ -260,7 +262,8 @@ void timeTest(int arraySize, int sortTime) {
 // ---------------------------------------- Run the sort algo and test the correction of the algorithm -------------------------------------
 
 int _assertEqualArray(const data_t * arr_sol, const data_t * arr_ans, const int arraySize) {
-    for (int i = 0; i < arraySize; i++) {
+    int i;
+    for (i = 0; i < arraySize; i++) {
         if (arr_sol[i] != arr_ans[i]) return 0;
     }
 
