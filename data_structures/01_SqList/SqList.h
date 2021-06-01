@@ -50,8 +50,8 @@ Status ClearList(SqList * L);
  * check wether the list contains valid element
  *
  * Return:
- * TRUE: There is valid
- * FALSE: There is not
+ * TRUE: There is no valid
+ * FALSE: There is 
  */
 Status ListEmpty(SqList L);
 
@@ -74,21 +74,21 @@ Status GetElem(SqList L, int i, ElemType * e);
  *
  * if there is no such element, return -1
  */
-int LocateElem(SqList L, ElemType e, Status(compare)(ElemType, ElemType));
+int LocateElem(SqList L, ElemType e, int(compare)(ElemType, ElemType));
 
 /*
  * Return the Prior element of cur_e
  * If exist, save it to pre_e, and return OK,
  * If not, return ERROR
  */
-Status PriorElem(SqList L, ElemType cur_e, ElemType * pre_e);
+Status PriorElem(SqList L, ElemType cur_e, ElemType * pre_e, int(comp)(ElemType, ElemType));
 
 /*
  * Return the next element of cur_e
  * If exist, save it to next_e, and return OK,
  * If not, return ERROR
  */
-Status NextElem(SqList L, ElemType cur_e, ElemType * next_e);
+Status NextElem(SqList L, ElemType cur_e, ElemType * next_e, int(comp)(ElemType, ElemType));
 
 /*
  * Delete the element on i-th position, and save the deleted element into e
