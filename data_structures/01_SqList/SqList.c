@@ -1,4 +1,4 @@
-#include "SqList.c"
+#include "SqList.h"
 
 /*
  * Create a sequence
@@ -6,15 +6,11 @@
  * if success return OK, either return ERROR
  */
 Status InitList(SqList * L) {
-    L = calloc(1, SqList);
-    if (L == NULL) return ERROR;
-
     L->elem = calloc(LIST_INIT_SIZE, sizeof(ElemType));
     if (L->elem == NULL) return ERROR;
 
     L->length = 0;
-    L->listSize = (L->length) * sizeof(ElemType));
-
+    L->listSize = LIST_INIT_SIZE;
     return OK;
 }
 
@@ -30,9 +26,6 @@ Status DestoryList(SqList * L) {
     free(L->elem);
     L->elem = NULL;
 
-    free(L);
-    L = NULL;
-    
     return OK;
 }
 
@@ -46,8 +39,7 @@ Status ClearList(SqList * L) {
     if (L == NULL) return ERROR;
 
     L->length = 0;
-    L->listSize = 0;
-
+    
     return OK;
 }
 
@@ -59,10 +51,10 @@ Status ClearList(SqList * L) {
  * FALSE: There is
  */
 Status ListEmpty(SqList L) {
-    if (L->length == 0)
+    if (L.length == 0)
         return TRUE;
     else
-        return False;
+        return FALSE;
 }
 
 
@@ -70,7 +62,7 @@ Status ListEmpty(SqList L) {
  * Return the number of valid elements in the list
  */
 int ListLength(SqList L) {
-    return L->length;
+    return L.length;
 }
 
 /*
@@ -80,9 +72,9 @@ int ListLength(SqList L) {
  * eitherwise, return ERROR
  */
 Status GetElem(SqList L, int i, ElemType * e) {
-    if (L == NULL || i >= L->length) return ERROR;
+    if (i < 0 || i >= L.length) return ERROR;
 
-    *e = (L->elem)[i];
+    *e = ((L.elem)[i]);
     return OK;
 }
 
@@ -92,23 +84,15 @@ Status GetElem(SqList L, int i, ElemType * e) {
  * if there is no such element, return -1
  */
 int LocateElem(SqList L, ElemType e, int(compare)(ElemType, ElemType)) {
-    if (L == NULL)
-        return -1;
-    
-    ElemType * temp_e = L->elem;
-    int l, r, mid, cmp_r;
-    l = 0;
-    r = L->length - 1;
+    ElemType * temp_e = L.elem;
+    int i, cmp_r;
 
-    while (r >= l) {
-        mid = (l + (r-l) / 2);
-        cmp_r = compare(temp_e[mid], e);
-        if (cmp_r == 0) return mid;
-        else if (cmp_r > 0) r = mid + 1;
-        else l = mid - 1;
+    for (i = 0; i < L.length; ++i) {
+        if (compare(temp_e[i], e) >= 0)
+            return i;
     }
 
-    return -1;
+    return i;
 }
 
 /*
@@ -123,7 +107,7 @@ Status PriorElem(SqList L, ElemType cur_e, ElemType * pre_e, int(cmp)(ElemType, 
 
     if (search_r == -1 || search_r == 0) return ERROR;
 
-    *pre_e = (L->elem)[search_r - 1];
+    *pre_e = (L.elem)[search_r - 1];
 
     return OK;
 }
@@ -138,9 +122,9 @@ Status NextElem(SqList L, ElemType cur_e, ElemType * next_e, int(cmp)(ElemType, 
 
     search_r = LocateElem(L, cur_e, cmp);
 
-    if (search_r == -1 || search_r == L->length - 2) return ERROR;
+    if (search_r == -1 || search_r == L.length - 2) return ERROR;
 
-    *next_e = (L->elem)[search_r + 1];
+    *next_e = (L.elem)[search_r + 1];
 
     return OK;
 }
@@ -161,7 +145,32 @@ Status ListDelete(SqList * L, int i, ElemType * e) {
     for (id = i; id < L->length - 1; ++id) {
         (L->elem)[id] = (L->elem)[id + 1];
     }
+    (L->length)--;
 
+    return OK;
+}
+
+/*
+ * Insert element e on position i,
+ * If the size of the list is not enough,
+ * assign new store space to the list.
+ */
+Status ListInsert(SqList * L, int i, ElemType e) {
+    if (L == NULL || i < 0 || i > L->length)
+        return ERROR;
+    
+    if (L->length ==  L->listSize) {
+       L->elem = realloc(L->elem, (L->listSize + LISTINCREMENT) * sizeof(ElemType)); 
+       L->listSize = L->listSize + LISTINCREMENT;
+    }
+
+    int j;
+    for (j = L->length - 1; j >= i; j--)
+        (L->elem)[j+1] = (L->elem)[j];
+    
+    (L->elem)[i] = e;
+    (L->length)++;
+    printf("L->length is : %d\n", L->length);
     return OK;
 }
 
@@ -169,11 +178,9 @@ Status ListDelete(SqList * L, int i, ElemType * e) {
  * Traverse the list use visit list L
  */
 void ListTraverse(SqList L, void (Visit)(ElemType)) {
-    if (L == NULL) return;
-    
-    ElemType * e_list = L->elem;
+    ElemType * e_list = L.elem;
     int i;
 
-    for (i = 0; i < L->length; ++i)
+    for (i = 0; i < L.length; ++i)
         Visit(e_list[i]);
 }

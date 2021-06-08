@@ -7,7 +7,7 @@
 #define TRUE     1
 #define FALSE    0
 #define OK       1
-#define ERROR    0
+#define ERROR   -1
 
 // Already have this statue code in the system, use ifndef to avoid conflict
 #ifndef OVERFLOW

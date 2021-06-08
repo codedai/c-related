@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Status.h"
+#include "../Status/Status.h"
 
 #define LIST_INIT_SIZE 100  // The init size of the sequence
 #define LISTINCREMENT   10  // The increasing size
@@ -97,6 +97,13 @@ Status NextElem(SqList L, ElemType cur_e, ElemType * next_e, int(comp)(ElemType,
 Status ListDelete(SqList * L, int i, ElemType * e);
 
 /*
+ * Insert element e on position i,
+ * If the size of the list is not enough, assign new store space to the list
+ */
+Status ListInsert(SqList * L, int i, ElemType e);
+
+/*
  * Traverse the list use visit list L
  */
 void ListTraverse(SqList L, void (Visit)(ElemType));
+#endif
