@@ -14,6 +14,21 @@ Status InitList(SqList * L) {
     return OK;
 }
 
+Status InitListWithSpace(SqList * L, int size) {
+    if (L == NULL) return ERROR;
+
+    if (size > LIST_INIT_SIZE)
+        L->listSize = size;
+    else
+        L->listSize = LIST_INIT_SIZE;
+
+    L->elem = calloc(L->listSize, sizeof(ElemType));
+    if (L->elem == NULL) return ERROR;
+
+    L->length = 0;
+    return OK;
+}
+
 
 /*
  * Destory the SqList
@@ -86,14 +101,29 @@ Status GetElem(SqList L, int i, ElemType * e) {
  */
 int LocateElem(SqList L, ElemType e, int(compare)(ElemType, ElemType)) {
     ElemType * temp_e = L.elem;
-    int i, cmp_r;
+    int i, cmp_r, r, l, mid, res;
 
-    for (i = 0; i < L.length; ++i) {
-        if (compare(temp_e[i], e) >= 0)
-            return i;
+    l = 0, r = L.length - 1;
+
+    while (l <= r) {
+        mid = l + (r - l) / 2;
+        res = compare(temp_e[mid], e);
+        if (res == 0)
+            return mid;
+        else if (res < 0)
+            l = mid + 1;
+        else
+            r = mid - 1;
     }
 
-    return i;
+    return l;
+    
+//    for (i = 0; i < L.length; ++i) {
+//        if (compare(temp_e[i], e) >= 0)
+//            return i;
+//    }
+//
+//    return i;
 }
 
 /*

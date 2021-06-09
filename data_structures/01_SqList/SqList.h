@@ -30,6 +30,12 @@ typedef struct {
  */
 Status InitList(SqList * L);
 
+/* 
+ * Create a sequence with space requirement
+ * If the required space bigger than the LIST_INIT_SIZE assgin the required space,
+ * otherwise, assgin LIST_INIT_SIZE
+ */
+Status InitListWithSpace(SqList * L, int size);
 
 /*
  * Destory the SqList
