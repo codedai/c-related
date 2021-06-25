@@ -30,5 +30,9 @@ int main (int argc, char *args[]) {
     MergeSqList(La, Lb, &Lc);
     ListTraverse(Lc, PrintElem);
 
+    DestoryList(&La);
+    DestoryList(&Lb);
+    DestoryList(&Lc);
+
     return 0;
 }
